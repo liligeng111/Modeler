@@ -1,8 +1,9 @@
 #include "modelerview.h"
 #include "camera.h"
+#include "util.h"
 
 #include <FL/Fl.H>
-#include <FL/Fl_Gl_Window.H>
+#include <FL/Fl_Gl_Window.h>
 #include <FL/gl.h>
 #include <GL/glu.h>
 #include <cstdio>

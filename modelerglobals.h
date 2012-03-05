@@ -5,16 +5,15 @@
 #define M_PI 3.141592653589793238462643383279502
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 // This is a list of the controls for the SampleModel
 // We'll use these constants to access the values 
 // of the controls from the user interface.
 enum SampleModelControls
 { 
-	XPOS, YPOS, ZPOS, HEIGHT, ROTATE, NUMCONTROLS
+	XPOS, YPOS, ZPOS, 
+	HEIGHT, ROTATE, 
+	// add more here
+	NUMCONTROLS
 };
 
 // Colors

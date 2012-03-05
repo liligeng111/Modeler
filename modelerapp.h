@@ -37,6 +37,7 @@ public:
 	~ModelerApplication();
 
 	// Fetch the global ModelerApplication instance
+	// only one instance allowed.
 	static ModelerApplication* Instance();
 
     // Initialize the application; see sample models for usage

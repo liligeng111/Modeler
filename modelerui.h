@@ -7,7 +7,7 @@
 #include <FL/Fl_Menu_Bar.H>
 #include "modelerview.h"
 #include <FL/Fl_File_Chooser.H>
-#include <FL/fl_message.H>
+#include <FL/Fl_Message.H>
 #include "bitmap.h"
 #include "modelerdraw.h"
 #include <FL/Fl_Browser.H>

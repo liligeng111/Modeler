@@ -23,7 +23,6 @@ Thumbs.db
 *.log
 [Bb]in
 ipch/
-[Dd]ebug*/
 *.sbr
 *.sdf
 *.ncb
@@ -31,6 +30,7 @@ ipch/
 *.orig
 obj/
 [Rr]elease*/
+[Dd]ebug*/
 _ReSharper*/
 [Tt]est[Rr]esult*
 [Tt]ry*/

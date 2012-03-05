@@ -1,4 +1,5 @@
 #include "modelerdraw.h"
+#include "util.h"
 #include <FL/gl.h>
 #include <GL/glu.h>
 #include <cstdio>

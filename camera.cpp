@@ -1,9 +1,6 @@
-#ifdef WIN32
 #include <windows.h>
-#endif // WIN32
-
-#include <FL/gl.h>
-#include <GL/glu.h>
+#include <Fl/gl.h>
+#include <gl/glu.h>
 
 #include "camera.h"
 

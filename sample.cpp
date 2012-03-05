@@ -73,9 +73,10 @@ void SampleModel::draw()
 int main()
 {
 	// Initialize the controls
-	// Constructor is ModelerControl(name, minimumvalue, maximumvalue, 
-	// stepsize, defaultvalue)
+	// Constructor is 
+	// ModelerControl(name, minimumvalue, maximumvalue, stepsize, defaultvalue)
     ModelerControl controls[NUMCONTROLS];
+	// gosh, this should be the right way..
     controls[XPOS] = ModelerControl("X Position", -5, 5, 0.1f, 0);
     controls[YPOS] = ModelerControl("Y Position", 0, 5, 0.1f, 0);
     controls[ZPOS] = ModelerControl("Z Position", -5, 5, 0.1f, 0);

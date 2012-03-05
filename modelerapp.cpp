@@ -1,6 +1,7 @@
 #include "modelerapp.h"
 #include "modelerview.h"
 #include "modelerui.h"
+#include "util.h"
 
 #include <FL/Fl_Value_Slider.H>
 #include <FL/Fl_Box.H>
