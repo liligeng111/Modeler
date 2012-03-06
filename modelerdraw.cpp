@@ -3,6 +3,8 @@
 #include <FL/gl.h>
 #include <GL/glu.h>
 #include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <math.h>
 
 // ********************************************************

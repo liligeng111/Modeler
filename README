@@ -2,6 +2,16 @@ course project -- Modeler
 
 compile both in linux and windows
 
+the provided files mat.h and vec.h
+are problmatic, finally make it work after some tweaks
+
+but the problems may arise in future cases, 
+should completely solve them by ... writing mat.h and vec.h by yourself..!
+
+------------------
+Actually I wonder, are these files borrowed from opencv ?
+------------------
+
 
 
 

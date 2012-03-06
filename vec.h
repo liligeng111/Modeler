@@ -4,16 +4,8 @@
 // Stupid FLTK includes iostream.h, so I can't include the official 
 // STL version of iostream.  Damn it all to bloody hell!  -- ehsu
 
-#if _MSC_VER >= 1300
-
 #include <iostream>
 using namespace std;
-
-#else  //_MSC_VER >= 1300
-
-#include <iostream.h>
-
-#endif // _MSC_VER >= 1300
 
 #include <cmath>
 
@@ -208,7 +200,7 @@ public:
 
 	//---[ Friend Methods ]----------------------
 
-#if _MSC_VER >= 1300
+#if _MSC_VER >= 1300 || !defined(WIN32)
 
 	template<class U> friend U operator *( const Vec3<U>& a, const Vec4<U>& b );
 	template<class U> friend U operator *( const Vec4<U>& b, const Vec3<U>& a );
@@ -218,6 +210,11 @@ public:
 	template<class U> friend Vec3<U> operator *( const Vec3<U>& v, Mat4<U>& a );
 	template<class U> friend U operator *( const Vec3<U>& a, const Vec3<U>& b );
 	template<class U> friend Vec3<U> operator *( const Mat3<U>& a, const Vec3<U>& v );
+
+  // try
+	template<class U> friend U operator *(Vec3<U>& a, Vec3<U>& v );
+	template<class U> friend Vec3<U> operator *(Mat4<U>& a, Vec3<U>& v);
+
 	template<class U> friend Vec3<U> operator *( const Vec3<U>& v, const Mat3<U>& a );
 	template<class U> friend Vec3<U> operator *( const Mat4<U>& a, const Vec3<U>& v );
 	template<class U> friend Vec3<U> operator /( const Vec3<U>& a, const double d );
@@ -328,7 +325,7 @@ public:
 	
 	//---[ Friend Methods ]----------------------
 
-#if _MSC_VER >= 1300
+#if _MSC_VER >= 1300 || !defined(WIN32)
 
 	template<class U> friend U operator *( const Vec3<U>& a, const Vec4<U>& b );
 	template<class U> friend U operator *( const Vec4<U>& b, const Vec3<U>& a );
@@ -337,6 +334,10 @@ public:
 	template<class U> friend Vec4<U> operator *( const double d, const Vec4<U>& a );
 	template<class U> friend U operator *( const Vec4<U>& a, const Vec4<U>& b );
 	template<class U> friend Vec4<U> operator *( const Mat4<U>& a, const Vec4<U>& v );
+
+  // try
+	template<class U> friend Vec3<U> operator *(Mat4<U>& a, Vec3<U>& v );
+  
 	template<class U> friend Vec4<U> operator *( const Vec4<U>& v, const Mat4<U>& a );
 	template<class U> friend Vec4<U> operator /( const Vec4<U>& a, const double d );
 	template<class U> friend Vec4<U> operator ^( const Vec4<U>& a, const Vec4<U>& b );
@@ -557,7 +558,7 @@ Vec<T> operator-( const Vec<T>& v ) {
 	Vec<T>	result( v.numElements, false );
 
 	for( int i=0;i<v.numElements;i++ )
-		result.n[i] = -n[i];
+		result.n[i] = -result.n[i];
 
 	return result;
 }
@@ -598,8 +599,11 @@ Vec<T> operator^( const Vec<T>& a, const Vec<T>& b ) {
 	if( a.numElements != b.numElements )
 		throw VectorSizeMismatch();
 #endif
-
-	return *this;
+	// return *this;
+  
+  // okay, let me implement it by myself
+  // but how to implement this power operation?
+  return a;
 }
 
 template <class T>
@@ -704,6 +708,8 @@ inline T operator *( const Vec4<T>& b, const Vec3<T>& a ) {
 
 template <class T>
 inline Vec3<T> operator -(const Vec3<T>& v) {
+  // will this temporary variable be deleted when this function exit..
+  // Oh, this is an inline function, that's why..
 	return Vec3<T>( -v.n[0], -v.n[1], -v.n[2] );
 }
 
@@ -724,6 +730,14 @@ inline Vec3<T> operator *(const Mat4<T>& a, const Vec3<T>& v){
 					a.n[8]*v.n[0]+a.n[9]*v.n[1]+a.n[10]*v.n[2]+a.n[11] );
 }
 
+// try, patch
+template <class T>
+inline Vec3<T> operator *(Mat4<T>& a, Vec3<T>& v){
+	return Vec3<T>( a.n[0]*v.n[0]+a.n[1]*v.n[1]+a.n[2]*v.n[2]+a.n[3],
+					a.n[4]*v.n[0]+a.n[5]*v.n[1]+a.n[6]*v.n[2]+a.n[7],
+					a.n[8]*v.n[0]+a.n[9]*v.n[1]+a.n[10]*v.n[2]+a.n[11] );
+}
+
 template <class T>
 inline Vec3<T> operator *(const Vec3<T>& v, Mat4<T>& a) {
 	return a.transpose() * v;
@@ -731,6 +745,12 @@ inline Vec3<T> operator *(const Vec3<T>& v, Mat4<T>& a) {
 
 template <class T>
 inline T operator *(const Vec3<T>& a, const Vec3<T>& b){
+	return a.n[0]*b.n[0] + a.n[1]*b.n[1] + a.n[2]*b.n[2];
+}
+
+// try
+template <class T>
+inline T operator *(Vec3<T>& a, Vec3<T>& b){
 	return a.n[0]*b.n[0] + a.n[1]*b.n[1] + a.n[2]*b.n[2];
 }
 
@@ -822,10 +842,11 @@ inline T operator *(const Vec4<T>& a, const Vec4<T>& b) {
 
 template <class T>
 inline Vec4<T> operator *(const Mat4<T>& a, const Vec4<T>& v) {
-	return Vec3<T>( a.n[0]*v.n[0]+a.n[1]*v.n[1]+a.n[2]*v.n[2]+a.n[3]*v.n[3],
-					a.n[4]*v.n[0]+a.n[5]*v.n[1]+a.n[6]*v.n[2]+a.n[7]*v.n[3],
-					a.n[8]*v.n[0]+a.n[9]*v.n[1]+a.n[10]*v.n[2]+a.n[11]*v.n[3],
-					a.n[12]*v.n[0]+a.n[13]*v.n[1]+a.n[14]*v.n[2]+a.n[15]*v.n[3],);
+	return Vec3<T>( 
+      a.n[0]*v.n[0]+a.n[1]*v.n[1]+a.n[2]*v.n[2]+a.n[3]*v.n[3],
+      a.n[4]*v.n[0]+a.n[5]*v.n[1]+a.n[6]*v.n[2]+a.n[7]*v.n[3],
+      a.n[8]*v.n[0]+a.n[9]*v.n[1]+a.n[10]*v.n[2]+a.n[11]*v.n[3],
+      a.n[12]*v.n[0]+a.n[13]*v.n[1]+a.n[14]*v.n[2]+a.n[15]*v.n[3]);
 }
 
 template <class T>
