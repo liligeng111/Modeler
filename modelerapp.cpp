@@ -63,8 +63,8 @@ void ModelerApplication::Init(ModelerViewCreator_f createView,
 {
     int i;
 
-	m_animating   = false;
-	m_numControls = numControls;
+    m_animating   = false;
+    m_numControls = numControls;
 
     // ********************************************************
     // Create the FLTK user interface
@@ -81,7 +81,7 @@ void ModelerApplication::Init(ModelerViewCreator_f createView,
     const int sliderHeight  = 20;
     const int packWidth     = m_ui->m_controlsPack->w();
 
-	m_ui->m_controlsPack->begin();
+    m_ui->m_controlsPack->begin();
     // For each control, add appropriate objects to the user interface
     for (i=0; i<m_numControls; i++)
     {
@@ -90,17 +90,20 @@ void ModelerApplication::Init(ModelerViewCreator_f createView,
 
         // Add the label (but make it invisible for now)
         Fl_Box *box = new Fl_Box(0, 0, packWidth, textHeight, controls[i].m_name);
-		box->labelsize(10);
-		box->hide();
-		box->box(FL_FLAT_BOX); // otherwise, Fl_Scroll messes up (ehsu)
+        box->labelsize(12);
+        box->hide();
+        box->box(FL_FLAT_BOX); // otherwise, Fl_Scroll messes up (ehsu)
+
         m_controlLabelBoxes[i] = box;
 
         // Add the slider (but make it invisible for now)
         Fl_Value_Slider *slider = new Fl_Value_Slider(0, 0, packWidth, sliderHeight,0);
-        slider->type(1);
+        slider->type(FL_HOR_NICE_SLIDER);
         slider->range(controls[i].m_minimum, controls[i].m_maximum);
-        slider->step(controls[i].m_stepsize);
+        slider->step(((int)(controls[i].m_stepsize * 100)) / 100.0);
         slider->value(controls[i].m_value);
+        slider->labelsize(13);
+        slider->align(FL_ALIGN_RIGHT);
         slider->hide(); 
         m_controlValueSliders[i] = slider;
         slider->callback((Fl_Callback*)ModelerApplication::SliderCallback);
@@ -135,10 +138,14 @@ int ModelerApplication::Run()
 		return -1;
 	}
 
-    // Just tell FLTK to go for it.
-   	Fl::visual( FL_RGB | FL_DOUBLE );
-	m_ui->show();
-	Fl::add_timeout(0, ModelerApplication::RedrawLoop, NULL);
+  // Just tell FLTK to go for it.
+  // double if it is really double buffered
+  Fl::visual( FL_RGB | FL_DOUBLE );
+
+  m_ui->show();
+
+  // this is constantly called
+  Fl::add_timeout(0, ModelerApplication::RedrawLoop, NULL);
 
 	return Fl::run();
 }
@@ -169,14 +176,18 @@ void ModelerApplication::HideControl(int controlNumber)
 
 void ModelerApplication::SliderCallback(Fl_Slider *, void *)
 {
+  // send the redraw request whenever value is changed,
+  // oh this is convenient
     ModelerApplication::Instance()->m_ui->m_modelerView->redraw();
 }
 
+extern const int FPS;
+
 void ModelerApplication::RedrawLoop(void*)
 {
-	if (ModelerApplication::Instance()->m_animating)
-		ModelerApplication::Instance()->m_ui->m_modelerView->redraw();
-
-	// 1/50 second update is good enough
-	Fl::add_timeout(0.025, ModelerApplication::RedrawLoop, NULL);
+    if (ModelerApplication::Instance()->m_animating) {
+      ModelerApplication::Instance()->m_ui->m_modelerView->redraw();
+    }
+ 
+    Fl::add_timeout(1.0 / FPS, ModelerApplication::RedrawLoop, NULL);
 }

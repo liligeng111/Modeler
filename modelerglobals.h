@@ -16,6 +16,10 @@ enum SampleModelControls
 	NUMCONTROLS
 };
 
+// Frames per seconds
+// this is the redraw rate
+static const int FPS = 50;
+
 // Colors
 #define COLOR_RED		1.0f, 0.0f, 0.0f
 #define COLOR_GREEN		0.0f, 1.0f, 0.0f

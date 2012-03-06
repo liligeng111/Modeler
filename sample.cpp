@@ -74,14 +74,14 @@ int main()
 {
 	// Initialize the controls
 	// Constructor is 
-	// ModelerControl(name, minimumvalue, maximumvalue, stepsize, defaultvalue)
+  // ModelerControl(name, minimumvalue, maximumvalue, stepsize, defaultvalue)
     ModelerControl controls[NUMCONTROLS];
 	// gosh, this should be the right way..
-    controls[XPOS] = ModelerControl("X Position", -5, 5, 0.1f, 0);
-    controls[YPOS] = ModelerControl("Y Position", 0, 5, 0.1f, 0);
-    controls[ZPOS] = ModelerControl("Z Position", -5, 5, 0.1f, 0);
-    controls[HEIGHT] = ModelerControl("Height", 1, 2.5, 0.1f, 1);
-	controls[ROTATE] = ModelerControl("Rotate", -135, 135, 1, 0);
+    controls[XPOS] = ModelerControl("X Position", -5, 5, 0.1, 0);
+    controls[YPOS] = ModelerControl("Y Position", 0, 5, 0.1, 0);
+    controls[ZPOS] = ModelerControl("Z Position", -5, 5, 0.1, 0);
+    controls[HEIGHT] = ModelerControl("Height", 1, 2.5, 0.1, 1);
+    controls[ROTATE] = ModelerControl("Rotate", -135, 135, 1, 0);
 
     ModelerApplication::Instance()->Init(&createSampleModel, controls, NUMCONTROLS);
     return ModelerApplication::Instance()->Run();
