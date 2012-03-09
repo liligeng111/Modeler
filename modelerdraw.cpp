@@ -10,6 +10,8 @@
 // ********************************************************
 // Support functions from previous version of modeler
 // ********************************************************
+#define PI 3.14159265
+
 void _dump_current_modelview( void )
 {
     ModelerDrawState *mds = ModelerDrawState::Instance();
@@ -235,6 +237,61 @@ void drawSphere(double r)
     }
 }
 
+void drawTorus(float R, float r)
+{
+    ModelerDrawState *mds = ModelerDrawState::Instance();
+
+	_setupOpenGl();
+    
+    if (mds->m_rayFile)
+    {
+        _dump_current_modelview();
+        fprintf(mds->m_rayFile,  
+            "what the fuck is this");
+        _dump_current_material();
+        fprintf(mds->m_rayFile,  "})))\n" );
+    }
+    else
+    {
+        /* remember which matrix mode OpenGL was in. */
+        int savemode;
+        glGetIntegerv( GL_MATRIX_MODE, &savemode );
+        
+        /* switch to the model matrix and scale by x,y,z. */
+		int n = 20;
+		int N = 20;
+        glMatrixMode( GL_MODELVIEW );
+        glPushMatrix();
+        
+		for (int j = 0; j < N; j++)
+		{
+			glRotated(360 / N, 0 ,1, 0);
+			float next_Cos = cos(2 * PI * (0 + 1) / N);
+			float next_Sin = sin(2 * PI * (0 + 1) / N);
+
+
+			glBegin(GL_TRIANGLE_STRIP);
+        
+			for (int i = 0; i < n + 1; i++)
+			{
+				float Sin = sin(2 * PI * i / n);
+				float Cos = cos(2 * PI * i / n);
+				glNormal3d(Cos, Sin, 0);
+				glVertex3d(R + Cos * r, Sin * r, 0);
+				
+				glNormal3d(Cos * next_Cos, Sin, Cos * next_Sin);
+				glVertex3d(next_Cos * R + Cos * r * next_Cos, Sin * r, next_Sin * R + Cos * r * next_Sin);
+			}
+        
+			glEnd();
+		}
+        
+        /* restore the model matrix stack, and switch back to the matrix
+        mode we were in. */
+        glPopMatrix();
+        glMatrixMode( savemode );
+    }
+}
 
 void drawBox( double x, double y, double z )
 {

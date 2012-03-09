@@ -19,6 +19,9 @@ enum SampleModelControls
 	RIGHT_LEG_ROTATE_X, RIGHT_LEG_ROTATE_Y,
 	//TAIL_X, TAIL_Y,TAIL_LENGTH,
 	FEET_SIZE,
+	TORUS_R,
+	TORUS_r,
+	
 
 	// add more here
 	NUMCONTROLS

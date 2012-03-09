@@ -84,6 +84,11 @@ void SampleModel::draw()
 	glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION,maemi);
 
 	glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS));
+		// dodecahedron
+		glPushMatrix();
+		glTranslated(.0f, 2.0f, .0f);
+		drawTorus(VAL(TORUS_R), VAL(TORUS_r));
+		glPopMatrix();
 
 		//head
 		glPushMatrix();
@@ -162,6 +167,9 @@ int main()
     //controls[TAIL_Y] = ModelerControl("Tail Rotate Y", -1, 1, 0.03f, 1);
     //controls[TAIL_LENGTH] = ModelerControl("Tail Length", 0.5, 5, 0.1f, 2);
     controls[FEET_SIZE] = ModelerControl("Feet Size", 0.5, 3, 0.1f, 1);
+    controls[TORUS_R] = ModelerControl("Torus R", 0, 10, 0.1f, 3);
+    controls[TORUS_r] = ModelerControl("Torus r", 0, 10, 0.1f, 1);
+	
 
     ModelerApplication::Instance()->Init(&createSampleModel, controls, NUMCONTROLS);
     return ModelerApplication::Instance()->Run();
