@@ -53,21 +53,52 @@ void drawTail()
 }
 */
 
+void swing(int control, double max, double min, double gap)
+{
+	static bool direction[NUMCONTROLS] = {};
+	if (ModelerApplication::Instance()->GetAnimating())
+	{
+		double value = VAL(control);
+
+		if (direction[control]) value += gap;
+		else value -= gap;
+		if (value >= MAX(control)) 
+		{
+			value = MAX(control);
+			direction[control] = 0;
+		}
+		if (value <= MIN(control)) 
+		{
+			value = MIN(control);
+			direction[control] = 1;
+		}
+		SETVAL(control, value);
+	}
+}
+
 // We are going to override (is that the right word?) the draw()
 // method of ModelerView to draw out SampleModel
 void SampleModel::draw()
 {
+
     // This call takes care of a lot of the nasty projection 
     // matrix stuff.  Unless you want to fudge directly with the 
 	// projection matrix, don't bother with this ...
     ModelerView::draw();
+	
+	//static long time = 0;
+	//time++;
+	swing(LEFT_ARM_ROTATE_X, MAX(LEFT_ARM_ROTATE_X), MIN(LEFT_ARM_ROTATE_X), 3.1);
+	swing(LEFT_ARM_ROTATE_Y, MAX(LEFT_ARM_ROTATE_Y), MIN(LEFT_ARM_ROTATE_Y), 2.5);
+
+	swing(RIGHT_ARM_ROTATE_X, MAX(RIGHT_ARM_ROTATE_X), MIN(RIGHT_ARM_ROTATE_X), 1.1);
+	swing(RIGHT_ARM_ROTATE_Y, MAX(RIGHT_ARM_ROTATE_Y), MIN(RIGHT_ARM_ROTATE_Y), 4.5);
 
 	// draw the floor
 	setAmbientColor(.1f,.1f,.1f);
 	setDiffuseColor(COLOR_BLUE);
 	glPushMatrix();
-	glTranslated(-5,0,-5);
-	drawBox(10,0.01f,10);
+	drawPolygon(6, 7);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -84,10 +115,11 @@ void SampleModel::draw()
 	glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION,maemi);
 
 	glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS));
-		// dodecahedron
+	glScaled(VAL(XSCALE), VAL(YSCALE), VAL(ZSCALE));
+		// Torus
 		glPushMatrix();
-		glTranslated(.0f, 2.0f, .0f);
-		drawTorus(VAL(TORUS_R), VAL(TORUS_r));
+		glTranslated(.0f, 6, .0f);
+		//drawTorus(VAL(TORUS_R), VAL(TORUS_r));
 		glPopMatrix();
 
 		//head
@@ -150,6 +182,9 @@ int main()
     controls[XPOS] = ModelerControl("X Position", -5, 5, 0.1f, 0);
     controls[YPOS] = ModelerControl("Y Position", 0, 5, 0.1f, 0);
     controls[ZPOS] = ModelerControl("Z Position", -5, 5, 0.1f, 0);
+    controls[XSCALE] = ModelerControl("X Scale", 0, 3, 0.1f, 1.0f);
+    controls[YSCALE] = ModelerControl("Y Scale", 0, 3, 0.1f, 1.0f);
+    controls[ZSCALE] = ModelerControl("Z Scale", 0, 3, 0.1f, 1.0f);
 	controls[HEAD_SIZE] = ModelerControl("Head Size", 0, 2, 0.1f, 1);
 	controls[HEAD_ROTATE] = ModelerControl("Head Rotate", -135, 135, 1, 0);
     controls[HEIGHT] = ModelerControl("Height", 1, 5, 0.1f, 2);

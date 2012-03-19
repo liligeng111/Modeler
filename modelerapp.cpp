@@ -142,6 +142,15 @@ int ModelerApplication::Run()
 
 	return Fl::run();
 }
+double ModelerApplication::GetMaxValue(int controlNumber)
+{
+    return m_controlValueSliders[controlNumber]->maximum();
+}
+
+double ModelerApplication::GetMinValue(int controlNumber)
+{
+    return m_controlValueSliders[controlNumber]->minimum();
+}
 
 double ModelerApplication::GetControlValue(int controlNumber)
 {
