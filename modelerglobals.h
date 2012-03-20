@@ -11,8 +11,20 @@
 enum SampleModelControls
 { 
 	XPOS, YPOS, ZPOS, 
+	XSCALE,YSCALE,ZSCALE,
 	HEAD_SIZE, HEAD_ROTATE, 
+	CARPET_SIZE, CARPET_DEPTH,
 	HEIGHT,
+	ARM_LENGTH, LEFT_ARM_ROTATE_X, LEFT_ARM_ROTATE_Y,
+	RIGHT_ARM_ROTATE_X, RIGHT_ARM_ROTATE_Y,
+	LEG_LENGTH, LEFT_LEG_ROTATE_X, LEFT_LEG_ROTATE_Y,
+	RIGHT_LEG_ROTATE_X, RIGHT_LEG_ROTATE_Y,
+	//TAIL_X, TAIL_Y,TAIL_LENGTH,
+	FEET_SIZE,
+	TORUS_R,
+	TORUS_r,
+	
+
 	// add more here
 	NUMCONTROLS
 };
@@ -30,5 +42,8 @@ static const int FPS = 50;
 // We'll be getting the instance of the application a lot; 
 // might as well have it as a macro.
 #define VAL(x) (ModelerApplication::Instance()->GetControlValue(x))
+#define SETVAL(x, d) (ModelerApplication::Instance()->SetControlValue(x, d))
+#define MAX(x) (ModelerApplication::Instance()->GetMaxValue(x))
+#define MIN(x) (ModelerApplication::Instance()->GetMinValue(x))
 
 #endif
