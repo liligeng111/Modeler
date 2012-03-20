@@ -98,7 +98,11 @@ void SampleModel::draw()
 	setAmbientColor(.1f,.1f,.1f);
 	setDiffuseColor(COLOR_BLUE);
 	glPushMatrix();
-	drawPolygon(6, 7);
+	glScaled(VAL(CARPET_SIZE), VAL(CARPET_SIZE), VAL(CARPET_SIZE));
+	drawSierpinskiTriangle(0, 0, 1,
+							0.866025404, 0, -0.5,
+							-0.866025404, 0, -0.5,
+							VAL(CARPET_DEPTH));
 	glPopMatrix();
 
 	glPushMatrix();
@@ -185,6 +189,8 @@ int main()
     controls[XSCALE] = ModelerControl("X Scale", 0, 3, 0.1f, 1.0f);
     controls[YSCALE] = ModelerControl("Y Scale", 0, 3, 0.1f, 1.0f);
     controls[ZSCALE] = ModelerControl("Z Scale", 0, 3, 0.1f, 1.0f);
+    controls[CARPET_SIZE] = ModelerControl("Carpet Size", 0, 10, 0.1f, 5.0f);
+    controls[CARPET_DEPTH] = ModelerControl("Carpet Depth", 0, 10, 1, 4);
 	controls[HEAD_SIZE] = ModelerControl("Head Size", 0, 2, 0.1f, 1);
 	controls[HEAD_ROTATE] = ModelerControl("Head Rotate", -135, 135, 1, 0);
     controls[HEIGHT] = ModelerControl("Height", 1, 5, 0.1f, 2);
