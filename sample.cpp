@@ -53,6 +53,9 @@ void drawTail()
 }
 */
 
+void drawWedge() {
+}
+
 void swing(int control, double max, double min, double gap)
 {
 	static bool direction[NUMCONTROLS] = {};
@@ -127,17 +130,20 @@ void SampleModel::draw()
 	glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS));
 	glScaled(VAL(XSCALE), VAL(YSCALE), VAL(ZSCALE));
 		// Torus
-		glPushMatrix();
-		glTranslated(.0f, 6, .0f);
-		drawTorus(VAL(TORUS_R), VAL(TORUS_r));
-		glPopMatrix();
+    if (VAL(DETAILS) > 1) {
+      glPushMatrix();
+      glTranslated(.0f, 6, .0f);
+      drawTorus(VAL(TORUS_R), VAL(TORUS_r));
+      glPopMatrix();
+    }
 
 		//head
 		glPushMatrix();
 		glTranslated(0, VAL(LEG_LENGTH) + 0.05 + VAL(HEIGHT) + 0.05 + VAL(HEAD_SIZE), 0);
 		glRotated(VAL(HEAD_ROTATE), 0.0, 1.0, 0.0);
 		drawSphere(VAL(HEAD_SIZE));
-    drawCylinder(VAL(HEAD_SIZE)*2, 0.2, 0.2);
+    if (VAL(DETAILS) > 2)
+    drawCylinder(VAL(HEAD_SIZE) * 1.2, 0.2, 0.2);
 		glPopMatrix();
 
 		//body
@@ -146,25 +152,55 @@ void SampleModel::draw()
 		glTranslated(0, 0.05 + VAL(LEG_LENGTH), 0);
 		glRotated(-90, 1.0, 0.0, 0.0);
 		drawRoundCylinder(VAL(HEIGHT), 0.7, 0.6);
-    glTranslated(-0.8, 0, VAL(HEIGHT) - 0.4);
-    glRotated(90, 0, 1, 0);
-    // the shoulder
-    drawRoundCylinder(1.6, 0.2, 0.2);
+      glPushMatrix();
+        glTranslated(-0.8, 0, VAL(HEIGHT) - 0.4);
+        glRotated(90, 0, 1, 0);
+        // the shoulder
+        if (VAL(DETAILS) > 1)
+        drawRoundCylinder(1.6, 0.2, 0.2);
+      glPopMatrix();
+
+      // the waist?
+      if (VAL(DETAILS) > 2) {
+        glPushMatrix();
+          glTranslated(0, 0, 0.5);
+          glRotated(90, 1, 0, 0);
+          drawTorus(0.7, 0.08);
+        glPopMatrix();
+      }
+    // the hip ? 
+    glTranslated(0, 0, 0.3);
+    if (VAL(DETAILS) > 1)
+    drawTorus(0.45, 0.2);
+
 		glPopMatrix();
 		
 		//right arm
 		glPushMatrix();
-		glTranslated(-0.7 - 0.20, VAL(LEG_LENGTH) + 0.05 + VAL(HEIGHT) * 0.9f, 0);
-    glTranslated(0.15, 0, 0);
-		glRotated(VAL(RIGHT_UPPER_ARM_ROTATE_X), 1.0, 0.0, 0.0);
-		glRotated(VAL(RIGHT_UPPER_ARM_ROTATE_Y), 0.0, 1.0, 0.0);
-    glTranslated(-0.15, 0, 0);
-		drawRoundCylinder(VAL(UPPER_ARM_LENGTH), 0.22, 0.15);
+      glTranslated(-0.7 - 0.20, VAL(LEG_LENGTH) + 0.05 + VAL(HEIGHT) * 0.9f, 0);
+      glTranslated(0.15, 0, 0);
+      glRotated(VAL(RIGHT_UPPER_ARM_ROTATE_X), 1.0, 0.0, 0.0);
+      glRotated(VAL(RIGHT_UPPER_ARM_ROTATE_Y), 0.0, 1.0, 0.0);
+      glTranslated(-0.15, 0, 0);
+      drawRoundCylinder(VAL(UPPER_ARM_LENGTH), 0.22, 0.15);
 
-    // lower arm
-    glTranslated(0, 0, VAL(UPPER_ARM_LENGTH) - 0.1);
-    glRotated(VAL(RIGHT_LOWER_ARM_ROTATE) - 180, 1, 0, 0);
-		drawRoundCylinder(VAL(LOWER_ARM_LENGTH), 0.15, 0.20);
+        // lower arm
+        glTranslated(0, 0, VAL(UPPER_ARM_LENGTH) - 0.1);
+        glRotated(VAL(RIGHT_LOWER_ARM_ROTATE) - 180, 1, 0, 0);
+        drawRoundCylinder(VAL(LOWER_ARM_LENGTH), 0.15, 0.20);
+
+          // hand, basically clamp
+          glPushMatrix();
+            glTranslated(-0.03, -0.15, VAL(LOWER_ARM_LENGTH) - 0.1);
+            glRotated(VAL(RIGHT_HAND_ANGLE), 0, 1, 0);
+            drawBox(0.03, 0.25, 0.5);
+          glPopMatrix();
+
+          glPushMatrix();
+            glTranslated(0.03, -0.15, VAL(LOWER_ARM_LENGTH) - 0.1);
+            glRotated(-VAL(RIGHT_HAND_ANGLE), 0, 1, 0);
+            drawBox(0.03, 0.25, 0.5);
+          glPopMatrix();
 
 		glPopMatrix();
 
@@ -181,23 +217,43 @@ void SampleModel::draw()
     glRotated(VAL(LEFT_LOWER_ARM_ROTATE) - 180, 1, 0, 0);
 		drawRoundCylinder(VAL(LOWER_ARM_LENGTH), 0.15, 0.20);
 
+          // hand, basically clamp
+          glPushMatrix();
+            glTranslated(-0.03, 0, VAL(LOWER_ARM_LENGTH) - 0.1);
+            glRotated(VAL(LEFT_HAND_ANGLE), 0, 1, 0);
+            drawCylinder(0.8, 0.15, 0.0001);
+          glPopMatrix();
+
+          glPushMatrix();
+            glTranslated(0.03, 0, VAL(LOWER_ARM_LENGTH) - 0.1);
+            glRotated(-VAL(LEFT_HAND_ANGLE), 0, 1, 0);
+            drawCylinder(0.8, 0.15, 0.0001);
+          glPopMatrix();
 
 		glPopMatrix();
 
 		//right leg
 		glPushMatrix();
-		glTranslated(-0.5, VAL(LEG_LENGTH), 0);
-		glRotated(VAL(RIGHT_LEG_ROTATE_X), 1.0, 0.0, 0.0);
-		glRotated(VAL(RIGHT_LEG_ROTATE_Y), 0.0, 1.0, 0.0);
-		drawRoundCylinder(VAL(LEG_LENGTH) - 0.15, 0.3, 0.4);
+      glTranslated(-0.5, VAL(LEG_LENGTH), 0);
+      glRotated(VAL(RIGHT_LEG_ROTATE_X), 1.0, 0.0, 0.0);
+      glRotated(VAL(RIGHT_LEG_ROTATE_Y), 0.0, 1.0, 0.0);
+      drawRoundCylinder(VAL(LEG_LENGTH) - 0.15, 0.3, 0.4);
+      glTranslated(0, 0, VAL(LEG_LENGTH) * 0.85f);
+      glRotated(90, 1, 0, 0);
+      drawTorus(VAL(FEET_SIZE), VAL(FEET_SIZE)/4);
+
 		glPopMatrix();
 
 		//left leg
 		glPushMatrix();
-		glTranslated(0.5, VAL(LEG_LENGTH), 0);
-		glRotated(VAL(LEFT_LEG_ROTATE_X), 1.0, 0.0, 0.0);
-		glRotated(VAL(LEFT_LEG_ROTATE_Y), 0.0, 1.0, 0.0);
-		drawRoundCylinder(VAL(LEG_LENGTH) - 0.15, 0.3, 0.4);
+      glTranslated(0.5, VAL(LEG_LENGTH), 0);
+      glRotated(VAL(LEFT_LEG_ROTATE_X), 1.0, 0.0, 0.0);
+      glRotated(VAL(LEFT_LEG_ROTATE_Y), 0.0, 1.0, 0.0);
+      drawRoundCylinder(VAL(LEG_LENGTH) - 0.15, 0.3, 0.4);
+      glTranslated(0, 0, VAL(LEG_LENGTH) * 0.85f);
+      glRotated(90, 1, 0, 0);
+      drawTorus(VAL(FEET_SIZE), VAL(FEET_SIZE)/4);
+
 		glPopMatrix();
 
 	glPopMatrix();
@@ -230,7 +286,9 @@ int main()
 
     controls[LOWER_ARM_LENGTH] = ModelerControl("Lower Arm Length", 1, 5, 0.1f, 0.8);
     controls[LEFT_LOWER_ARM_ROTATE] = ModelerControl("Left Lower Arm Rotate", 20, 180, 1.0f, 80);
-    controls[RIGHT_LOWER_ARM_ROTATE] = ModelerControl("Right Lower Arm Rotate", 20, 180, 1.0f, 0);
+    controls[RIGHT_LOWER_ARM_ROTATE] = ModelerControl("Right Lower Arm Rotate", 20, 180, 1.0f, 180);
+    controls[RIGHT_HAND_ANGLE] = ModelerControl("Right Hand Angle", 0, 70, 1, 0);
+    controls[LEFT_HAND_ANGLE] = ModelerControl("Left Hand Angle", 0, 70, 1, 0);
 
     controls[LEG_LENGTH] = ModelerControl("Leg Length", 1, 5, 0.1f, 2);
     controls[LEFT_LEG_ROTATE_X] = ModelerControl("Left Leg Rotate X", 0, 90, 1.0f, 80);
@@ -242,11 +300,12 @@ int main()
     //controls[TAIL_Y] = ModelerControl("Tail Rotate Y", -1, 1, 0.03f, 1);
     //controls[TAIL_LENGTH] = ModelerControl("Tail Length", 0.5, 5, 0.1f, 2);
     //
-    controls[FEET_SIZE] = ModelerControl("Feet Size", 0.5, 3, 0.1f, 1);
-    controls[TORUS_R] = ModelerControl("Torus R", 0, 10, 0.1f, 0.8);
-    controls[TORUS_r] = ModelerControl("Torus r", 0, 10, 0.1f, 0.2);
-	
+    controls[FEET_SIZE] = ModelerControl("Feet Size", 0.1, 1, 0.02f, 0.3);
+    controls[TORUS_R] = ModelerControl("Torus R", 0, 10, 0.1f, 0.6);
+    controls[TORUS_r] = ModelerControl("Torus r", 0, 10, 0.1f, 0.15);
 
+    controls[DETAILS] = ModelerControl("Details", 1, 3, 1, 3);
+	
     ModelerApplication::Instance()->Init(&createSampleModel, controls, NUMCONTROLS);
     return ModelerApplication::Instance()->Run();
 }

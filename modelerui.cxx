@@ -18,6 +18,12 @@ trivial question, ignore it..
 #include <fstream>
 using namespace std;
 
+// to be implemented
+void frame_all(Fl_Menu_* o, void* v) {
+  printf("Frame all!!!\n");
+}
+
+
 inline void ModelerUserInterface::cb_m_controlsWindow_i(Fl_Window*, void*) {
   // what does this do?
   // don't understand
@@ -81,6 +87,7 @@ if (filename)
 	delete [] imageBuffer;
 };
 }
+
 void ModelerUserInterface::cb_Save1(Fl_Menu_* o, void* v) {
   ((ModelerUserInterface*)(o->parent()->user_data()))->cb_Save1_i(o,v);
 }
@@ -262,6 +269,7 @@ Fl_Menu_Item ModelerUserInterface::menu_m_controlsMenuBar[] = {
  {"Low Quality", 0,  (Fl_Callback*)ModelerUserInterface::cb_Low, 0, 8, 0, 0, 14, 0},
  {"Poor Quality", 0,  (Fl_Callback*)ModelerUserInterface::cb_Poor, 0, 136, 0, 0, 14, 0},
  {"Focus on Origin", 0,  (Fl_Callback*)ModelerUserInterface::cb_Focus, 0, 0, 0, 0, 14, 0},
+ {"Frame All", 0,  (Fl_Callback*)frame_all, 0, 0, 0, 0, 14, 0},
  {0},
  {"Animate", 0,  0, 0, 64, 0, 0, 14, 0},
  {"Enable", 0,  (Fl_Callback*)ModelerUserInterface::cb_m_controlsAnimOnMenu, 0, 2, 0, 0, 14, 0},

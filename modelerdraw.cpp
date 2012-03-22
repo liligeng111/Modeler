@@ -582,11 +582,3 @@ void loadTexture()
 	delete []data;
 }
 
-
-
-
-
-
-
-
-
