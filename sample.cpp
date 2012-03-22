@@ -76,8 +76,6 @@ void swing(int control, double max, double min, double gap)
 	}
 }
 
-// We are going to override (is that the right word?) the draw()
-// method of ModelerView to draw out SampleModel
 void SampleModel::draw()
 {
 
@@ -88,13 +86,14 @@ void SampleModel::draw()
 	
 	//static long time = 0;
 	//time++;
-	swing(LEFT_ARM_ROTATE_X, MAX(LEFT_ARM_ROTATE_X), MIN(LEFT_ARM_ROTATE_X), 3.1);
-	swing(LEFT_ARM_ROTATE_Y, MAX(LEFT_ARM_ROTATE_Y), MIN(LEFT_ARM_ROTATE_Y), 2.5);
+	swing(LEFT_UPPER_ARM_ROTATE_X, MAX(LEFT_UPPER_ARM_ROTATE_X), MIN(LEFT_UPPER_ARM_ROTATE_X), 3.1);
+	swing(LEFT_UPPER_ARM_ROTATE_Y, MAX(LEFT_UPPER_ARM_ROTATE_Y), MIN(LEFT_UPPER_ARM_ROTATE_Y), 2.5);
 
-	swing(RIGHT_ARM_ROTATE_X, MAX(RIGHT_ARM_ROTATE_X), MIN(RIGHT_ARM_ROTATE_X), 1.1);
-	swing(RIGHT_ARM_ROTATE_Y, MAX(RIGHT_ARM_ROTATE_Y), MIN(RIGHT_ARM_ROTATE_Y), 4.5);
+	swing(RIGHT_UPPER_ARM_ROTATE_X, MAX(RIGHT_UPPER_ARM_ROTATE_X), MIN(RIGHT_UPPER_ARM_ROTATE_X), 1.1);
+	swing(RIGHT_UPPER_ARM_ROTATE_Y, MAX(RIGHT_UPPER_ARM_ROTATE_Y), MIN(RIGHT_UPPER_ARM_ROTATE_Y), 4.5);
 
 	// draw the floor
+  // let's make it big !!!
 	setAmbientColor(.1f,.1f,.1f);
 	setDiffuseColor(COLOR_BLUE);
 	glPushMatrix();
@@ -103,7 +102,13 @@ void SampleModel::draw()
 							0.866025404, 0, -0.5,
 							-0.866025404, 0, -0.5,
 							VAL(CARPET_DEPTH));
+
+  glRotated(90, 1, 0, 0);
+  glTranslated(0, 0, 0.1);
+	setDiffuseColor(COLOR_RED);
+  drawCylinder(0.3, 1, 1);
 	glPopMatrix();
+
 
 	glPushMatrix();
 	// draw the sample model
@@ -111,6 +116,7 @@ void SampleModel::draw()
 	GLfloat madiffuse[]={0.50754f,0.50754f,0.50754f,1.0f};
 	GLfloat maspecular[]={0.508273f,0.508273f,0.508273f,0.508273f};
 	GLfloat maemi[4]={0.0f,0.0f,0.0f,1.0f};
+  // what do these magic numbers mean?
 
 	glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,maambient);
 	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,madiffuse);
@@ -123,7 +129,7 @@ void SampleModel::draw()
 		// Torus
 		glPushMatrix();
 		glTranslated(.0f, 6, .0f);
-		//drawTorus(VAL(TORUS_R), VAL(TORUS_r));
+		drawTorus(VAL(TORUS_R), VAL(TORUS_r));
 		glPopMatrix();
 
 		//head
@@ -131,30 +137,51 @@ void SampleModel::draw()
 		glTranslated(0, VAL(LEG_LENGTH) + 0.05 + VAL(HEIGHT) + 0.05 + VAL(HEAD_SIZE), 0);
 		glRotated(VAL(HEAD_ROTATE), 0.0, 1.0, 0.0);
 		drawSphere(VAL(HEAD_SIZE));
+    drawCylinder(VAL(HEAD_SIZE)*2, 0.2, 0.2);
 		glPopMatrix();
 
 		//body
+    // a.k.a. torso/trunk
 		glPushMatrix();
 		glTranslated(0, 0.05 + VAL(LEG_LENGTH), 0);
 		glRotated(-90, 1.0, 0.0, 0.0);
 		drawRoundCylinder(VAL(HEIGHT), 0.7, 0.6);
+    glTranslated(-0.8, 0, VAL(HEIGHT) - 0.4);
+    glRotated(90, 0, 1, 0);
+    // the shoulder
+    drawRoundCylinder(1.6, 0.2, 0.2);
 		glPopMatrix();
 		
 		//right arm
 		glPushMatrix();
-		glTranslated(-0.7 - 0.3, VAL(LEG_LENGTH) + 0.05 + VAL(HEIGHT) * 0.8f, 0);
-		glRotated(VAL(RIGHT_ARM_ROTATE_X), 1.0, 0.0, 0.0);
-		glRotated(VAL(RIGHT_ARM_ROTATE_Y), 0.0, 1.0, 0.0);
-		drawRoundCylinder(VAL(ARM_LENGTH), 0.3, 0.26);
+		glTranslated(-0.7 - 0.20, VAL(LEG_LENGTH) + 0.05 + VAL(HEIGHT) * 0.9f, 0);
+    glTranslated(0.15, 0, 0);
+		glRotated(VAL(RIGHT_UPPER_ARM_ROTATE_X), 1.0, 0.0, 0.0);
+		glRotated(VAL(RIGHT_UPPER_ARM_ROTATE_Y), 0.0, 1.0, 0.0);
+    glTranslated(-0.15, 0, 0);
+		drawRoundCylinder(VAL(UPPER_ARM_LENGTH), 0.22, 0.15);
+
+    // lower arm
+    glTranslated(0, 0, VAL(UPPER_ARM_LENGTH) - 0.1);
+    glRotated(VAL(RIGHT_LOWER_ARM_ROTATE) - 180, 1, 0, 0);
+		drawRoundCylinder(VAL(LOWER_ARM_LENGTH), 0.15, 0.20);
+
 		glPopMatrix();
 
-		
 		//left arm
 		glPushMatrix();
-		glTranslated(0.7 + 0.3, VAL(LEG_LENGTH) + 0.05 + VAL(HEIGHT) * 0.8f, 0);
-		glRotated(VAL(LEFT_ARM_ROTATE_X), 1.0, 0.0, 0.0);
-		glRotated(VAL(LEFT_ARM_ROTATE_Y), 0.0, 1.0, 0.0);
-		drawRoundCylinder(VAL(ARM_LENGTH), 0.3, 0.26);
+		glTranslated(0.7 + 0.20, VAL(LEG_LENGTH) + 0.05 + VAL(HEIGHT) * 0.9f, 0);
+    glTranslated(-0.15, 0, 0);
+		glRotated(VAL(LEFT_UPPER_ARM_ROTATE_X), 1.0, 0.0, 0.0);
+		glRotated(VAL(LEFT_UPPER_ARM_ROTATE_Y), 0.0, 1.0, 0.0);
+    glTranslated(0.15, 0, 0);
+		drawRoundCylinder(VAL(UPPER_ARM_LENGTH), 0.22, 0.15);
+
+    glTranslated(0, 0, VAL(UPPER_ARM_LENGTH) - 0.1);
+    glRotated(VAL(LEFT_LOWER_ARM_ROTATE) - 180, 1, 0, 0);
+		drawRoundCylinder(VAL(LOWER_ARM_LENGTH), 0.15, 0.20);
+
+
 		glPopMatrix();
 
 		//right leg
@@ -162,7 +189,7 @@ void SampleModel::draw()
 		glTranslated(-0.5, VAL(LEG_LENGTH), 0);
 		glRotated(VAL(RIGHT_LEG_ROTATE_X), 1.0, 0.0, 0.0);
 		glRotated(VAL(RIGHT_LEG_ROTATE_Y), 0.0, 1.0, 0.0);
-		drawRoundCylinder(VAL(LEG_LENGTH) - 0.15, 0.37, 0.4);
+		drawRoundCylinder(VAL(LEG_LENGTH) - 0.15, 0.3, 0.4);
 		glPopMatrix();
 
 		//left leg
@@ -170,7 +197,7 @@ void SampleModel::draw()
 		glTranslated(0.5, VAL(LEG_LENGTH), 0);
 		glRotated(VAL(LEFT_LEG_ROTATE_X), 1.0, 0.0, 0.0);
 		glRotated(VAL(LEFT_LEG_ROTATE_Y), 0.0, 1.0, 0.0);
-		drawRoundCylinder(VAL(LEG_LENGTH) - 0.15, 0.37, 0.4);
+		drawRoundCylinder(VAL(LEG_LENGTH) - 0.15, 0.3, 0.4);
 		glPopMatrix();
 
 	glPopMatrix();
@@ -191,25 +218,33 @@ int main()
     controls[ZSCALE] = ModelerControl("Z Scale", 0, 3, 0.1f, 1.0f);
     controls[CARPET_SIZE] = ModelerControl("Carpet Size", 0, 10, 0.1f, 5.0f);
     controls[CARPET_DEPTH] = ModelerControl("Carpet Depth", 0, 10, 1, 4);
-	controls[HEAD_SIZE] = ModelerControl("Head Size", 0, 2, 0.1f, 1);
-	controls[HEAD_ROTATE] = ModelerControl("Head Rotate", -135, 135, 1, 0);
+    controls[HEAD_SIZE] = ModelerControl("Head Size", 0, 2, 0.1f, 1);
+    controls[HEAD_ROTATE] = ModelerControl("Head Rotate", -135, 135, 1, 0);
     controls[HEIGHT] = ModelerControl("Height", 1, 5, 0.1f, 2);
-    controls[ARM_LENGTH] = ModelerControl("Arm Length", 1, 5, 0.1f, 2);
-    controls[LEFT_ARM_ROTATE_X] = ModelerControl("Left Arm Rotate X", -90, 100, 1.0f, 80);
-    controls[LEFT_ARM_ROTATE_Y] = ModelerControl("Left Arm Rotate Y", -30, 90, 1.0f, 0);
-    controls[RIGHT_ARM_ROTATE_X] = ModelerControl("Right Arm Rotate X", -90, 100, 1.0f, -40);
-    controls[RIGHT_ARM_ROTATE_Y] = ModelerControl("Right Arm Rotate Y", -90, 30, 1.0f, 0);
+
+    controls[UPPER_ARM_LENGTH] = ModelerControl("Upper Arm Length", 1, 5, 0.1f, 0.8);
+    controls[LEFT_UPPER_ARM_ROTATE_X] = ModelerControl("Left Upper Arm Rotate X", -90, 100, 1.0f, 80);
+    controls[LEFT_UPPER_ARM_ROTATE_Y] = ModelerControl("Left Upper Arm Rotate Y", -30, 90, 1.0f, 0);
+    controls[RIGHT_UPPER_ARM_ROTATE_X] = ModelerControl("Right Upper Arm Rotate X", -90, 100, 1.0f, -40);
+    controls[RIGHT_UPPER_ARM_ROTATE_Y] = ModelerControl("Right Upper Arm Rotate Y", -90, 30, 1.0f, 0);
+
+    controls[LOWER_ARM_LENGTH] = ModelerControl("Lower Arm Length", 1, 5, 0.1f, 0.8);
+    controls[LEFT_LOWER_ARM_ROTATE] = ModelerControl("Left Lower Arm Rotate", 20, 180, 1.0f, 80);
+    controls[RIGHT_LOWER_ARM_ROTATE] = ModelerControl("Right Lower Arm Rotate", 20, 180, 1.0f, 0);
+
     controls[LEG_LENGTH] = ModelerControl("Leg Length", 1, 5, 0.1f, 2);
     controls[LEFT_LEG_ROTATE_X] = ModelerControl("Left Leg Rotate X", 0, 90, 1.0f, 80);
     controls[LEFT_LEG_ROTATE_Y] = ModelerControl("Left Leg Rotate Y", -80, 90, 1.0f, 0);
     controls[RIGHT_LEG_ROTATE_X] = ModelerControl("Right Leg Rotate X", 0, 90, 1.0f, 90);
     controls[RIGHT_LEG_ROTATE_Y] = ModelerControl("Right Leg Rotate Y", -90, 80, 1.0f, 0);
+
     //controls[TAIL_X] = ModelerControl("Tail Rotate X", -1, 1, 0.03f, 0.001);
     //controls[TAIL_Y] = ModelerControl("Tail Rotate Y", -1, 1, 0.03f, 1);
     //controls[TAIL_LENGTH] = ModelerControl("Tail Length", 0.5, 5, 0.1f, 2);
+    //
     controls[FEET_SIZE] = ModelerControl("Feet Size", 0.5, 3, 0.1f, 1);
-    controls[TORUS_R] = ModelerControl("Torus R", 0, 10, 0.1f, 3);
-    controls[TORUS_r] = ModelerControl("Torus r", 0, 10, 0.1f, 1);
+    controls[TORUS_R] = ModelerControl("Torus R", 0, 10, 0.1f, 0.8);
+    controls[TORUS_r] = ModelerControl("Torus r", 0, 10, 0.1f, 0.2);
 	
 
     ModelerApplication::Instance()->Init(&createSampleModel, controls, NUMCONTROLS);

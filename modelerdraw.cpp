@@ -274,9 +274,10 @@ void drawTorus(float R, float r)
 		}
 		
 		int N = 2 * n;
-        glMatrixMode( GL_MODELVIEW );
-        glPushMatrix();
-        
+    glMatrixMode( GL_MODELVIEW );
+    glPushMatrix();
+    glPushAttrib(GL_CURRENT_BIT);
+
 		for (int j = 0; j < N; j++)
 		{
 			glRotated(360.0f / N, 0 ,1, 0);
@@ -305,6 +306,7 @@ void drawTorus(float R, float r)
         /* restore the model matrix stack, and switch back to the matrix
         mode we were in. */
         glPopMatrix();
+        glPopAttrib();
         glMatrixMode( savemode );
     }
 }
