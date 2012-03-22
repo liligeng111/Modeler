@@ -106,10 +106,8 @@ void SampleModel::draw()
 							-0.866025404, 0, -0.5,
 							VAL(CARPET_DEPTH));
 
-  glRotated(90, 1, 0, 0);
   glTranslated(0, 0, 0.1);
-	setDiffuseColor(COLOR_RED);
-  drawCylinder(0.3, 1, 1);
+	drawPolygon(7, 2);
 	glPopMatrix();
 
 

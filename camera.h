@@ -66,6 +66,8 @@ public:
     
     inline void setLookAt( const Vec3f &lookAt )
     { mLookAt = lookAt; mDirtyTransform = true;}
+    inline void setPosition()
+    { mPosition.normalize(); mPosition *= 3.0f;}
     inline Vec3f getLookAt() const
     { return mLookAt; }
     

@@ -77,9 +77,9 @@ int ModelerView::handle(int event)
 }
 
 static GLfloat lightPosition0[] = { 4, 2, -4, 0 };
-static GLfloat lightDiffuse0[]  = { 1,1,0.85,1 };
+static GLfloat lightDiffuse0[]  = { 1, 0,0.5,0 };
 static GLfloat lightPosition1[] = { 1, 1, 5, 0};
-static GLfloat lightDiffuse1[]  = { 1, 1, 0.85, 1 };
+static GLfloat lightDiffuse1[]  = { 0, 0.12, 0.85, 0 };
 
 void ModelerView::draw()
 {
@@ -88,9 +88,9 @@ void ModelerView::draw()
         glShadeModel( GL_SMOOTH );
         glEnable( GL_DEPTH_TEST );
         glEnable( GL_LIGHTING );
-		glEnable( GL_LIGHT0 );
+	glEnable( GL_LIGHT0 );
         glEnable( GL_LIGHT1 );
-		glEnable( GL_NORMALIZE );
+	glEnable( GL_NORMALIZE );
     }
 
   	glViewport( 0, 0, w(), h() );
@@ -107,5 +107,4 @@ void ModelerView::draw()
     glLightfv( GL_LIGHT0, GL_DIFFUSE, lightDiffuse0 );
     glLightfv( GL_LIGHT1, GL_POSITION, lightPosition1 );
     glLightfv( GL_LIGHT1, GL_DIFFUSE, lightDiffuse1 );
-    glLightfv( GL_LIGHT1, GL_SPECULAR, lightDiffuse1 );
 }
